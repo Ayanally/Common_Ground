@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Common Ground</title>
+
+    <style>
+        /* ---- Basic Reset ---- */
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #1a1a2e;
+          min-height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        /* ---- Card (the white box in the center) ---- */
+        .card {
+          background-color: white;
+          width: 420px;
+          border-radius: 16px;
+          overflow: hidden;
+        }
+
+        /* ---- Green Header ---- */
+        .header {
+          background-color: #22c55e;
+          text-align: center;
+          padding: 30px 20px;
+        }
+
+        .header h1 {
+          color: white;
+          font-size: 36px;
+          font-weight: bold;
+          line-height: 1;
+        }
+
+        .header p {
+          color: white;
+          font-size: 13px;
+          margin-top: 8px;
+          letter-spacing: 2px;
+        }
+
+        /* ---- Card Body ---- */
+        .body {
+          padding: 28px 28px 32px;
+        }
+
+        /* ---- Section Title ---- */
+        .section-title {
+          text-align: center;
+          font-size: 13px;
+          font-weight: bold;
+          letter-spacing: 2px;
+          color: #111;
+          margin-bottom: 16px;
+        }
+
+        /* ---- Role Buttons (Player, Coach, Venue) ---- */
+        .role-group {
+          display: flex;
+          gap: 10px;
+          margin-bottom: 20px;
+        }
+
+        .role-btn {
+          flex: 1;
+          padding: 10px 6px;
+          border: 2px solid #ccc;
+          border-radius: 10px;
+          background-color: white;
+          font-size: 14px;
+          font-weight: bold;
+          cursor: pointer;
+          color: #555;
+        }
+
+        .role-btn:hover {
+          border-color: #22c55e;
+          color: #22c55e;
+        }
+
+        .role-btn.active {
+          background-color: #22c55e;
+          border-color: #22c55e;
+          color: white;
+        }
+
+        /* ---- Form Labels ---- */
+        label {
+          display: block;
+          font-size: 12px;
+          font-weight: bold;
+          letter-spacing: 1px;
+          color: #111;
+          margin-bottom: 5px;
+        }
+
+        /* ---- Text Inputs ---- */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+          width: 100%;
+          padding: 12px 14px;
+          border: 2px solid #ddd;
+          border-radius: 10px;
+          font-size: 14px;
+          background-color: #f0faf3;
+          margin-bottom: 4px;
+          outline: none;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+          border-color: #22c55e;
+        }
+
+        /* ---- Error message under inputs ---- */
+        .error-msg {
+          color: red;
+          font-size: 12px;
+          margin-bottom: 10px;
+          min-height: 16px;
+        }
+
+        /* ---- The "Forgot?" link next to Password label ---- */
+        .label-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 5px;
+        }
+
+        .label-row label {
+          margin-bottom: 0;
+        }
+
+        .forgot-link {
+          font-size: 13px;
+          color: #22c55e;
+          text-decoration: none;
+          font-weight: bold;
+        }
+
+        /* ---- Main Submit Button ---- */
+        .submit-btn {
+          width: 100%;
+          padding: 15px;
+          background-color: #22c55e;
+          color: white;
+          font-size: 17px;
+          font-weight: bold;
+          border: none;
+          border-radius: 10px;
+          cursor: pointer;
+          margin-top: 6px;
+          letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+          background-color: #16a34a;
+        }
+
+        /* ---- Bottom sign-up / login text ---- */
+        .bottom-text {
+          text-align: center;
+          margin-top: 18px;
+          font-size: 14px;
+          color: #888;
+        }
+
+        .bottom-text a {
+          display: block;
+          margin-top: 4px;
+          font-weight: bold;
+          color: #111;
+          text-decoration: none;
+          font-size: 14px;
+        }
+
+        .bottom-text a:hover {
+          color: #22c55e;
+        }
+
+        /* ---- Two-column row (used in signup for First / Last name) ---- */
+        .two-col {
+          display: flex;
+          gap: 12px;
+        }
+
+        .two-col .field {
+          flex: 1;
+        }
+
+        /* ---- Checkbox row (Terms) ---- */
+        .checkbox-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 8px;
+          margin-bottom: 4px;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+          margin-top: 3px;
+          width: 16px;
+          height: 16px;
+          accent-color: #22c55e;
+          cursor: pointer;
+        }
+
+        .checkbox-row span {
+          font-size: 13px;
+          color: #555;
+          line-height: 1.5;
+        }
+
+        .checkbox-row a {
+          color: #22c55e;
+          font-weight: bold;
+          text-decoration: none;
+        }
+
+        /* ---- Hide/Show pages ---- */
+        .page {
+          display: none;
+        }
+
+        .page.active {
+          display: block;
+        }
+
+        /* ---- Mobile friendly ---- */
+        @media (max-width: 460px) {
+          .card {
+            width: 100%;
+            border-radius: 0;
+          }
+
+          .two-col {
+            flex-direction: column;
+            gap: 0;
+          }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+
+    <!-- Green Header (same for both pages) -->
+    <div class="header">
+        <h1>COMMON<br>GROUND</h1>
+        <p id="header-tag">GET IN THE GAME</p>
+    </div>
+
+    <!-- ===================== -->
+    <!--    LOGIN PAGE         -->
+    <!-- ===================== -->
+    <div class="body page active" id="login-page">
+
+        <p class="section-title">SELECT YOUR ROSTER SPOT</p>
+
+        <!-- FORM START -->
+        <form action="login" method="post" onsubmit="return handleLogin()">
+
+            <!-- Role Buttons -->
+            <div class="role-group" id="login-roles">
+                <button type="button" class="role-btn active"
+                        onclick="selectRole('login-roles', this, 'Player')">⭐ Player</button>
+
+                <button type="button" class="role-btn"
+                        onclick="selectRole('login-roles', this, 'Coach')">🎙 Coach</button>
+
+                <button type="button" class="role-btn"
+                        onclick="selectRole('login-roles', this, 'Venue')">🏟 Venue</button>
+            </div>
+
+            <!-- Hidden Role -->
+            <input type="hidden" name="role" id="login-role" value="Player">
+
+            <!-- Email -->
+            <label for="login-email">EMAIL ADDRESS</label>
+            <input type="email" id="login-email" name="email"
+                   placeholder="athlete@example.com" required />
+            <div class="error-msg" id="login-email-error"></div>
+
+            <!-- Password -->
+            <div class="label-row">
+                <label for="login-pass">PASSWORD</label>
+                <a href="#" class="forgot-link">Forgot?</a>
+            </div>
+            <input type="password" id="login-pass" name="password"
+                   placeholder="••••••••" required />
+            <div class="error-msg" id="login-pass-error"></div>
+
+            <!-- Submit -->
+            <button type="submit" class="submit-btn">LOGIN & PLAY</button>
+
+        </form>
+        <!-- FORM END -->
+
+        <div class="bottom-text">
+            Ready to join the league?
+            <a href="#" onclick="showPage('signup')">SIGN UP HERE</a>
+        </div>
+
+    </div><!-- end login-page -->
+
+
+    <!-- ===================== -->
+    <!--    SIGN UP PAGE       -->
+    <!-- ===================== -->
+    <div class="body page" id="signup-page">
+        <p class="section-title">CREATE YOUR ACCOUNT</p>
+
+        <form action="signup" method="POST" id="signupForm" onsubmit="return handleSignup()">
+
+            <div class="role-group" id="signup-roles">
+                <button type="button" class="role-btn active" onclick="selectRole('signup-roles', this, 'Player')">⭐ Player</button>
+                <button type="button" class="role-btn"        onclick="selectRole('signup-roles', this, 'Coach')">🎙 Coach</button>
+                <button type="button" class="role-btn"        onclick="selectRole('signup-roles', this, 'Venue')">🏟 Venue</button>
+            </div>
+
+            <input type="hidden" name="signup-role" id="signup-role-val" value="Player">
+
+            <div class="field">
+                <label for="signup-fullname">FULL NAME</label>
+                <input type="text" id="signup-fullname" name="signup-fullname" placeholder="John Doe" />
+                <div class="error-msg" id="signup-fullname-error"></div>
+            </div>
+
+            <label for="signup-email">EMAIL ADDRESS</label>
+            <input type="email" id="signup-email" name="signup-email" placeholder="athlete@example.com" />
+            <div class="error-msg" id="signup-email-error"></div>
+
+            <label for="signup-pass">PASSWORD</label>
+            <input type="password" id="signup-pass" name="signup-pass" placeholder="Min. 8 characters" />
+            <div class="error-msg" id="signup-pass-error"></div>
+
+            <label for="signup-confirm">CONFIRM PASSWORD</label>
+            <input type="password" id="signup-confirm" name="signup-confirm" placeholder="Repeat your password" />
+            <div class="error-msg" id="signup-confirm-error"></div>
+
+            <div class="checkbox-row">
+                <input type="checkbox" id="signup-terms" name="signup-terms" />
+                <span>
+              I agree to the <a href="#">Terms</a>
+            </span>
+            </div>
+            <div class="error-msg" id="signup-terms-error"></div>
+
+            <button type="submit" class="submit-btn">JOIN THE TEAM</button>
+
+            <!-- Switch to Log in -->
+            <div class="bottom-text">
+                Already on the roster?
+                <a href="#" onclick="showPage('login')">LOGIN HERE</a>
+            </div>
+
+        </form>
+    </div>
+</div> <!-- end card -->
+
+<script>
+    // -----------------------------------------------
+    // Show a page (login or signup)
+    // -----------------------------------------------
+    function showPage(pageName) {
+      // Hide all pages
+      document.getElementById('login-page').classList.remove('active');
+      document.getElementById('signup-page').classList.remove('active');
+
+      // Show the chosen page
+      document.getElementById(pageName + '-page').classList.add('active');
+
+      // Update the header tagline
+      if (pageName === 'signup') {
+        document.getElementById('header-tag').textContent = 'JOIN THE LEAGUE';
+      } else {
+        document.getElementById('header-tag').textContent = 'GET IN THE GAME';
+      }
+    }
+
+    // -----------------------------------------------
+    // Role button selector
+    // -----------------------------------------------
+    function selectRole(groupId, clickedBtn, role) {
+      var buttons = document.getElementById(groupId).querySelectorAll('.role-btn');
+
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove('active');
+      }
+
+      clickedBtn.classList.add('active');
+
+      // If we are on the LOGIN page
+      if (groupId === 'login-roles') {
+        document.getElementById('login-role').value = role;
+      }
+      // If we are on the SIGNUP page
+      else if (groupId === 'signup-roles') {
+        document.getElementById('signup-role-val').value = role;
+      }
+    }
+
+    // -----------------------------------------------
+    // Show an error message under an input
+    // -----------------------------------------------
+    function showError(errorId, message) {
+      document.getElementById(errorId).textContent = message;
+    }
+
+    // -----------------------------------------------
+    // Clear an error message
+    // -----------------------------------------------
+    function clearError(errorId) {
+      document.getElementById(errorId).textContent = '';
+    }
+
+    // -----------------------------------------------
+    // Check if email looks valid
+    // -----------------------------------------------
+    function isValidEmail(email) {
+      return email.includes('@') && email.includes('.');
+    }
+
+    // -----------------------------------------------
+    // Handle Login
+    // -----------------------------------------------
+    function handleLogin() {
+      var email = document.getElementById('login-email').value.trim();
+      var pass  = document.getElementById('login-pass').value;
+      var ok    = true;
+
+      // Clear old errors
+      clearError('login-email-error');
+      clearError('login-pass-error');
+
+      // Check email
+      if (email === '') {
+        showError('login-email-error', 'Please enter your email.');
+        ok = false;
+      } else if (!isValidEmail(email)) {
+        showError('login-email-error', 'Please enter a valid email address.');
+        ok = false;
+      }
+
+      // Check password
+      if (pass === '') {
+        showError('login-pass-error', 'Please enter your password.');
+        ok = false;
+      } else if (pass.length < 6) {
+        showError('login-pass-error', 'Password must be at least 6 characters.');
+        ok = false;
+      }
+
+      // If everything is fine
+      if (ok) {
+        return true; // Form submits to Servlet
+      }
+
+      else {
+        return false; // Form stops and shows your red errors
+      }
+    }
+
+    // -----------------------------------------------
+    // Handle Sign Up
+    // -----------------------------------------------
+    function handleSignup() {
+  // 1. Get Values (Note: changed to 'signup-fullname' to match your HTML)
+  var fullname = document.getElementById('signup-fullname').value.trim();
+  var email    = document.getElementById('signup-email').value.trim();
+  var pass     = document.getElementById('signup-pass').value;
+  var confirm  = document.getElementById('signup-confirm').value;
+  var terms    = document.getElementById('signup-terms').checked;
+  var ok       = true;
+
+  // 2. Clear old errors
+  clearError('signup-fullname-error');
+  clearError('signup-email-error');
+  clearError('signup-pass-error');
+  clearError('signup-confirm-error');
+  clearError('signup-terms-error');
+
+  // 3. Check full name
+  if (fullname === '') {
+    showError('signup-fullname-error', 'Please enter your full name.');
+    ok = false;
+  }
+
+  // 4. Check email
+  if (email === '') {
+    showError('signup-email-error', 'Please enter your email.');
+    ok = false;
+  } else if (!isValidEmail(email)) {
+    showError('signup-email-error', 'Please enter a valid email address.');
+    ok = false;
+  }
+
+  // 5. Check password
+  if (pass === '') {
+    showError('signup-pass-error', 'Please enter a password.');
+    ok = false;
+  } else if (pass.length < 8) {
+    showError('signup-pass-error', 'Password must be at least 8 characters.');
+    ok = false;
+  }
+
+  // 6. Check confirm password (THIS IS YOUR MATCH CHECK)
+  if (confirm === '') {
+    showError('signup-confirm-error', 'Please confirm your password.');
+    ok = false;
+  } else if (confirm !== pass) {
+    showError('signup-confirm-error', 'Passwords do not match.');
+    ok = false;
+  }
+
+  // 7. Check terms checkbox
+  if (!terms) {
+    showError('signup-terms-error', 'Please accept the terms to continue.');
+    ok = false;
+  }
+
+  // 8. Final Decision
+  if (ok) {
+    // Return true to allow the form to submit to the Signup Servlet
+    return true;
+  } else {
+    // Return false to stop the form and show red errors
+    return false;
+  }
+}
+
+    //handles user not found!!
+    window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (urlParams.get('error') === '1') {
+        // Use your existing showError function to display the message
+        showError('login-pass-error', 'Account not found for this role.');
+
+        // Optional: A real browser pop-up
+        alert("Login Failed: User not found.");
+    } else if (urlParams.get('error') === 'db') {
+        showError('login-pass-error', 'Database connection error.');
+    }
+
+    else if (urlParams.get('error') === 'exists') {
+        // Show the error on the signup page
+        showPage('signup'); // Make sure they stay on the signup page
+        showError('signup-email-error', 'This email is already registered. Please login.');
+        alert("Signup Failed: User already exists.");
+    }
+}
+</script>
+
+</body>
+</html>
