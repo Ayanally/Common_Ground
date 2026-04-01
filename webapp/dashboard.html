@@ -255,29 +255,31 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
+        <!-- Form For Add event -->
+      <form id="eventForm" method="post" action="addEvent">
       <div class="modal-body">
         <div class="form-group">
           <label for="eventName">Event Name</label>
-          <input type="text" id="eventName" placeholder="e.g. Weekend Cricket Match" />
+          <input type="text" id="eventName" name="eventName" placeholder="e.g. Weekend Cricket Match" />
         </div>
         <div class="form-row">
           <div class="form-group">
             <label for="eventDate">Date</label>
-            <input type="date" id="eventDate" />
+            <input type="date" id="eventDate" name="eventDate" />
           </div>
           <div class="form-group">
             <label for="eventTime">Time</label>
-            <input type="time" id="eventTime" />
+            <input type="time" id="eventTime" name="eventTime" />
           </div>
         </div>
         <div class="form-group">
           <label for="eventLocation">Location</label>
-          <input type="text" id="eventLocation" placeholder="e.g. Shivaji Park, Mumbai" />
+          <input type="text" id="eventLocation" name="eventLocation" placeholder="e.g. Shivaji Park, Mumbai" />
         </div>
         <div class="form-row">
           <div class="form-group">
             <label for="eventSport">Sport</label>
-            <select id="eventSport">
+            <select id="eventSport" name="eventSport">
               <option value="">Select sport</option>
               <option>Cricket</option>
               <option>Football</option>
@@ -289,7 +291,7 @@
           </div>
           <div class="form-group">
             <label for="eventLevel">Skill Level</label>
-            <select id="eventLevel">
+            <select id="eventLevel" name="eventLevel">
               <option value="">Any level</option>
               <option>Beginner</option>
               <option>Intermediate</option>
@@ -299,13 +301,14 @@
         </div>
         <div class="form-group">
           <label for="eventDesc">Description <span class="optional">(optional)</span></label>
-          <textarea id="eventDesc" rows="3" placeholder="Add details about the event..."></textarea>
+          <textarea id="eventDesc" name="eventDesc" rows="3" placeholder="Add details about the event..."></textarea>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn-cancel" id="cancelModal">Cancel</button>
-        <button class="btn-save" id="saveEvent">Create Event</button>
+        <button type="button" class="btn-cancel" id="cancelModal">Cancel</button>
+        <button type="submit" class="btn-save" id="saveEvent">Create Event</button>
       </div>
+      </form>
     </div>
   </div>
 

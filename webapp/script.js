@@ -1,19 +1,28 @@
 // ===== NAV LINK SWITCHING =====
-document.querySelectorAll('.nav-link').forEach(link => {
+const navLinks = document.querySelectorAll('.nav-link');
+
+navLinks.forEach(link => {
   link.addEventListener('click', function (e) {
     e.preventDefault();
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+
+    navLinks.forEach(l => l.classList.remove('active'));
     this.classList.add('active');
   });
 });
 
+
 // ===== NOTIFICATION BELL =====
-document.getElementById('notifBell').addEventListener('click', function () {
+const notifBell = document.getElementById('notifBell');
+
+notifBell.addEventListener('click', function () {
   const badge = document.getElementById('notifBadge');
-  if (badge) badge.style.display = 'none';
+  if (badge) {
+    badge.style.display = 'none';
+  }
 });
 
-// ===== CONNECT BUTTON TOGGLE =====
+
+// ===== CONNECT BUTTON =====
 function handleConnect(btn) {
   if (btn.classList.contains('connected')) {
     btn.classList.remove('connected');
@@ -25,76 +34,111 @@ function handleConnect(btn) {
   }
 }
 
+
 // ===== FILTER PANEL TOGGLE =====
 const filterToggle = document.getElementById('filterToggle');
-const filterPanel  = document.getElementById('filterPanel');
+const filterPanel = document.getElementById('filterPanel');
 
 filterToggle.addEventListener('click', function () {
   const isOpen = filterPanel.classList.toggle('open');
   filterToggle.classList.toggle('open', isOpen);
 });
 
-// ===== FILTER LOGIC =====
+
+// ===== FILTER VARIABLES =====
 let activeLocation = 'all';
-let activeLevel    = 'all';
+let activeLevel = 'all';
 
-document.querySelectorAll('.chip').forEach(chip => {
+
+// ===== FILTER CLICK =====
+const chips = document.querySelectorAll('.chip');
+
+chips.forEach(chip => {
   chip.addEventListener('click', function () {
-    const filterType = this.dataset.filter;
-    const value      = this.dataset.value;
 
-    // Update active chip within the same group
-    document.querySelectorAll(`.chip[data-filter="${filterType}"]`).forEach(c => c.classList.remove('active'));
+    const filterType = this.dataset.filter;
+    const value = this.dataset.value;
+
+    document.querySelectorAll(`.chip[data-filter="${filterType}"]`)
+      .forEach(c => c.classList.remove('active'));
+
     this.classList.add('active');
 
-    if (filterType === 'location') activeLocation = value;
-    if (filterType === 'level')    activeLevel    = value;
+    if (filterType === 'location') {
+      activeLocation = value;
+    }
+
+    if (filterType === 'level') {
+      activeLevel = value;
+    }
 
     applyFilters();
     updateFilterCount();
   });
 });
 
+
+// ===== APPLY FILTERS =====
 function applyFilters() {
-  const cards      = document.querySelectorAll('#matchList .user-card');
+
+  const cards = document.querySelectorAll('#matchList .user-card');
   let visibleCount = 0;
 
   cards.forEach(card => {
-    const km    = parseFloat(card.dataset.km);
+
+    const km = parseFloat(card.dataset.km);
     const level = card.dataset.level;
 
     const locationOk = activeLocation === 'all' || km <= parseFloat(activeLocation);
-    const levelOk    = activeLevel    === 'all' || level === activeLevel;
+    const levelOk = activeLevel === 'all' || level === activeLevel;
 
-    const show = locationOk && levelOk;
-    card.style.display = show ? '' : 'none';
-    if (show) visibleCount++;
+    if (locationOk && levelOk) {
+      card.style.display = '';
+      visibleCount++;
+    } else {
+      card.style.display = 'none';
+    }
+
   });
 
-  document.getElementById('emptyState').style.display = visibleCount === 0 ? 'flex' : 'none';
-}
+  const emptyState = document.getElementById('emptyState');
 
-function updateFilterCount() {
-  const countEl  = document.getElementById('filterCount');
-  let activeCount = 0;
-  if (activeLocation !== 'all') activeCount++;
-  if (activeLevel    !== 'all') activeCount++;
-
-  if (activeCount > 0) {
-    countEl.textContent    = activeCount;
-    countEl.style.display  = 'inline-flex';
+  if (visibleCount === 0) {
+    emptyState.style.display = 'flex';
   } else {
-    countEl.style.display  = 'none';
+    emptyState.style.display = 'none';
   }
 }
 
-// ===== CLEAR FILTERS =====
-document.getElementById('clearFilters').addEventListener('click', function () {
-  activeLocation = 'all';
-  activeLevel    = 'all';
 
-  document.querySelectorAll('.chip[data-filter="location"]').forEach(c => c.classList.remove('active'));
-  document.querySelectorAll('.chip[data-filter="level"]').forEach(c => c.classList.remove('active'));
+// ===== FILTER COUNT =====
+function updateFilterCount() {
+
+  const countEl = document.getElementById('filterCount');
+  let count = 0;
+
+  if (activeLocation !== 'all') count++;
+  if (activeLevel !== 'all') count++;
+
+  if (count > 0) {
+    countEl.textContent = count;
+    countEl.style.display = 'inline-flex';
+  } else {
+    countEl.style.display = 'none';
+  }
+}
+
+
+// ===== CLEAR FILTERS =====
+const clearBtn = document.getElementById('clearFilters');
+
+clearBtn.addEventListener('click', function () {
+
+  activeLocation = 'all';
+  activeLevel = 'all';
+
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+
   document.querySelector('.chip[data-filter="location"][data-value="all"]').classList.add('active');
   document.querySelector('.chip[data-filter="level"][data-value="all"]').classList.add('active');
 
@@ -102,10 +146,14 @@ document.getElementById('clearFilters').addEventListener('click', function () {
   updateFilterCount();
 });
 
+
 // ===== MODAL =====
 const modalOverlay = document.getElementById('modalOverlay');
+const openModalBtn = document.getElementById('openModal');
+const closeModalBtn = document.getElementById('closeModal');
+const cancelModalBtn = document.getElementById('cancelModal');
 
-document.getElementById('openModal').addEventListener('click', () => {
+openModalBtn.addEventListener('click', function () {
   modalOverlay.classList.add('open');
   document.getElementById('eventName').focus();
 });
@@ -114,53 +162,58 @@ function closeModal() {
   modalOverlay.classList.remove('open');
 }
 
-document.getElementById('closeModal').addEventListener('click', closeModal);
-document.getElementById('cancelModal').addEventListener('click', closeModal);
+closeModalBtn.addEventListener('click', closeModal);
+cancelModalBtn.addEventListener('click', closeModal);
 
-// Close on overlay click
+
+// ===== CLOSE ON OUTSIDE CLICK =====
 modalOverlay.addEventListener('click', function (e) {
-  if (e.target === modalOverlay) closeModal();
+  if (e.target === modalOverlay) {
+    closeModal();
+  }
 });
 
-// Close on Escape key
+
+// ===== CLOSE ON ESC =====
 document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape' && modalOverlay.classList.contains('open')) closeModal();
+  if (e.key === 'Escape' && modalOverlay.classList.contains('open')) {
+    closeModal();
+  }
 });
 
-// ===== SAVE EVENT =====
-document.getElementById('saveEvent').addEventListener('click', function () {
+
+// ===== BASIC VALIDATION ONLY (NO FETCH) =====
+const form = document.getElementById('eventForm');
+
+form.addEventListener('submit', function (e) {
+
   const name = document.getElementById('eventName').value.trim();
+
   if (!name) {
-    document.getElementById('eventName').focus();
-    document.getElementById('eventName').style.borderColor = '#e63946';
-    return;
+    e.preventDefault(); // stop form submission
+    const input = document.getElementById('eventName');
+    input.focus();
+    input.style.borderColor = '#e63946';
   }
 
-  // Update upcoming games count
-  const countEl = document.getElementById('upcomingCount');
-  countEl.textContent = parseInt(countEl.textContent) + 1;
-
-  closeModal();
-  showToast('🎉 Event "' + name + '" created!');
-
-  // Reset form
-  ['eventName','eventDate','eventTime','eventLocation','eventDesc'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('eventSport').selectedIndex = 0;
-  document.getElementById('eventLevel').selectedIndex = 0;
-  document.getElementById('eventName').style.borderColor = '';
 });
 
-// Reset border on input
+
+// ===== RESET BORDER ON INPUT =====
 document.getElementById('eventName').addEventListener('input', function () {
   this.style.borderColor = '';
 });
 
+
 // ===== TOAST =====
 function showToast(message) {
+
   const toast = document.getElementById('toast');
+
   toast.textContent = message;
   toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3000);
+
+  setTimeout(function () {
+    toast.classList.remove('show');
+  }, 3000);
 }
