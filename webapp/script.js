@@ -1,3 +1,5 @@
+alert("JS IS RUNNING");
+
 // ===== NAV LINK SWITCHING =====
 const navLinks = document.querySelectorAll('.nav-link');
 
@@ -217,3 +219,78 @@ function showToast(message) {
     toast.classList.remove('show');
   }, 3000);
 }
+
+//===Card Logic===
+
+// ===== USER DATA =====
+const users = [
+  {
+    name: "Rahul Sharma",
+    km: 5.5,
+    level: "intermediate",
+    location: "Mumbai",
+    interests: ["cricket", "basketball"],
+    bio: "Love playing cricket on weekends!",
+    img: "https://i.pravatar.cc/64?img=12"
+  },
+  {
+    name: "Priya Nair",
+    km: 3.1,
+    level: "beginner",
+    location: "Bandra",
+    interests: ["badminton", "yoga"],
+    bio: "Looking for a practice partner!",
+    img: "https://i.pravatar.cc/64?img=5"
+  }
+];
+
+// ===== RENDER CARDS =====
+function renderCards() {
+
+  const matchList = document.getElementById("matchList");
+  matchList.innerHTML = ""; // clear existing
+
+  console.log("users:", users);        // ← add this
+  console.log("users length:", users.length);  // ← and this
+
+  users.forEach(user => {
+
+    const card = document.createElement("div");
+    card.className = "user-card";
+
+    // IMPORTANT for filters
+    card.dataset.km = user.km;
+    card.dataset.level = user.level;
+
+    card.innerHTML = `
+      <img src="${user.img}" class="user-avatar"/>
+
+      <div class="user-info">
+        <div class="user-header">
+          <span class="user-name">${user.name}</span>
+          <span class="tag">${user.level}</span>
+        </div>
+
+        <div class="user-location">
+          ${user.location} • ${user.km} km away
+        </div>
+
+        <div class="user-interests">
+          ${user.interests.map(i => `<span class="interest-tag">${i}</span>`).join("")}
+        </div>
+
+        <p class="user-bio">${user.bio}</p>
+      </div>
+
+      <div class="user-actions">
+        <button class="btn-connect" onclick="handleConnect(this)">Connect</button>
+        <button class="btn-message">Message</button>
+      </div>
+    `;
+
+    matchList.appendChild(card);
+  });
+
+  applyFilters(); // apply filters after render
+}
+renderCards();
