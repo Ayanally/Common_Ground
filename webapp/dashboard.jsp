@@ -1,3 +1,12 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%
+    String userName  = (String) session.getAttribute("userFname");
+    String userCity  = (String) session.getAttribute("userCity");
+    String userLevel = (String) session.getAttribute("userLevel");
+    if (userName  == null) userName  = "User";
+    if (userCity  == null) userCity  = "";
+    if (userLevel == null) userLevel = "Beginner";
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,12 +54,12 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         <span class="notif-badge" id="notifBadge">1</span>
       </div>
-      <img src="https://i.pravatar.cc/36?img=8" alt="Alex Johnson" class="avatar" />
+      <img src="https://i.pravatar.cc/36?img=8" alt="<%= userName %>" class="avatar" />
       <div class="profile-info">
-        <span class="profile-name">Alex Johnson</span>
-        <span class="profile-location">Mumbai</span>
+        <span class="profile-name"><%= userName %></span>
+        <span class="profile-location"><%= userCity %></span>
       </div>
-      <button class="logout-btn" title="Logout">
+      <button class="logout-btn" title="Logout" onclick="window.location.href='logout'">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       </button>
     </div>
@@ -62,7 +71,7 @@
     <!-- HERO BANNER -->
     <section class="hero">
       <div class="hero-text">
-        <h1>Welcome back, Alex Johnson! 👋</h1>
+        <h1>Welcome back, <%= userName %>! 👋</h1>
         <p>You have 1 potential matches nearby</p>
       </div>
       <button class="btn-add-event" id="openModal">
@@ -96,7 +105,7 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
         </div>
         <div>
-          <div class="stat-value">intermediate</div>
+          <div class="stat-value"><%= userLevel %></div>
           <div class="stat-label">Your Level</div>
         </div>
       </div>
@@ -174,7 +183,6 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-        <!-- Form For Add event -->
       <form id="eventForm" method="post" action="addEvent">
       <div class="modal-body">
         <div class="form-group">
@@ -192,8 +200,16 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="eventLocation">Location</label>
-          <input type="text" id="eventLocation" name="eventLocation" placeholder="e.g. Shivaji Park, Mumbai" />
+          <label for="eventAddress">Address</label>
+          <input type="text" id="eventAddress" name="eventAddress" placeholder="e.g. Gokuldham Society, MG Road" />
+        </div>
+        <div class="form-group">
+          <label for="eventCity">City</label>
+          <input type="text" id="eventCity" name="eventCity" placeholder="e.g. Mumbai" />
+        </div>
+        <div class="form-group">
+          <label for="eventPincode">Pincode</label>
+          <input type="text" id="eventPincode" name="eventPincode" placeholder="e.g. 400011" maxlength="6" />
         </div>
         <div class="form-row">
           <div class="form-group">

@@ -1,5 +1,3 @@
-alert("JS IS RUNNING");
-
 // ===== NAV LINK SWITCHING =====
 const navLinks = document.querySelectorAll('.nav-link');
 
@@ -62,7 +60,7 @@ chips.forEach(chip => {
     const value = this.dataset.value;
 
     document.querySelectorAll(`.chip[data-filter="${filterType}"]`)
-      .forEach(c => c.classList.remove('active'));
+        .forEach(c => c.classList.remove('active'));
 
     this.classList.add('active');
 
@@ -184,18 +182,46 @@ document.addEventListener('keydown', function (e) {
 });
 
 
-// ===== BASIC VALIDATION ONLY (NO FETCH) =====
+// ===== BASIC VALIDATION =====
 const form = document.getElementById('eventForm');
 
 form.addEventListener('submit', function (e) {
 
   const name = document.getElementById('eventName').value.trim();
+  const address = document.getElementById('eventAddress').value.trim();
+  const city = document.getElementById('eventCity').value.trim();
+  const pincode = document.getElementById('eventPincode').value.trim();
 
   if (!name) {
-    e.preventDefault(); // stop form submission
+    e.preventDefault();
     const input = document.getElementById('eventName');
     input.focus();
     input.style.borderColor = '#e63946';
+    return;
+  }
+
+  if (!address) {
+    e.preventDefault();
+    const input = document.getElementById('eventAddress');
+    input.focus();
+    input.style.borderColor = '#e63946';
+    return;
+  }
+
+  if (!city) {
+    e.preventDefault();
+    const input = document.getElementById('eventCity');
+    input.focus();
+    input.style.borderColor = '#e63946';
+    return;
+  }
+
+  if (!pincode || pincode.length !== 6) {
+    e.preventDefault();
+    const input = document.getElementById('eventPincode');
+    input.focus();
+    input.style.borderColor = '#e63946';
+    return;
   }
 
 });
@@ -203,6 +229,18 @@ form.addEventListener('submit', function (e) {
 
 // ===== RESET BORDER ON INPUT =====
 document.getElementById('eventName').addEventListener('input', function () {
+  this.style.borderColor = '';
+});
+
+document.getElementById('eventAddress').addEventListener('input', function () {
+  this.style.borderColor = '';
+});
+
+document.getElementById('eventCity').addEventListener('input', function () {
+  this.style.borderColor = '';
+});
+
+document.getElementById('eventPincode').addEventListener('input', function () {
   this.style.borderColor = '';
 });
 
@@ -220,77 +258,64 @@ function showToast(message) {
   }, 3000);
 }
 
-//===Card Logic===
+const matchList = document.getElementById('matchList');
 
-// ===== USER DATA =====
-const users = [
-  {
-    name: "Rahul Sharma",
-    km: 5.5,
-    level: "intermediate",
-    location: "Mumbai",
-    interests: ["cricket", "basketball"],
-    bio: "Love playing cricket on weekends!",
-    img: "https://i.pravatar.cc/64?img=12"
-  },
-  {
-    name: "Priya Nair",
-    km: 3.1,
-    level: "beginner",
-    location: "Bandra",
-    interests: ["badminton", "yoga"],
-    bio: "Looking for a practice partner!",
-    img: "https://i.pravatar.cc/64?img=5"
-  }
-];
+function loadMatches() {
+    fetch('/common/getData')
+        .then(res => res.json())
+        .then(users => {
+            // Clear current list before adding new ones
+            matchList.innerHTML = '';
 
-// ===== RENDER CARDS =====
-function renderCards() {
+            if (users.length === 0) {
+                matchList.innerHTML = '<div class="empty-state">No matches found yet.</div>';
+                return;
+            }
 
-  const matchList = document.getElementById("matchList");
-  matchList.innerHTML = ""; // clear existing
+            users.forEach(u => {
+                // Formatting data from DB
+                const interests = u.sports ? u.sports.split(",") : [];
+                const randomKm = Math.floor(Math.random() * 15) + 1;
+                const randomImg = "https://i.pravatar.cc/64?img=" + Math.floor(Math.random() * 70);
 
-  console.log("users:", users);        // ← add this
-  console.log("users length:", users.length);  // ← and this
+                // Create the element using your CSS classes
+                const card = document.createElement('div');
+                card.className = 'user-card';
 
-  users.forEach(user => {
-
-    const card = document.createElement("div");
-    card.className = "user-card";
-
-    // IMPORTANT for filters
-    card.dataset.km = user.km;
-    card.dataset.level = user.level;
-
-    card.innerHTML = `
-      <img src="${user.img}" class="user-avatar"/>
-
-      <div class="user-info">
-        <div class="user-header">
-          <span class="user-name">${user.name}</span>
-          <span class="tag">${user.level}</span>
-        </div>
-
-        <div class="user-location">
-          ${user.location} • ${user.km} km away
-        </div>
-
-        <div class="user-interests">
-          ${user.interests.map(i => `<span class="interest-tag">${i}</span>`).join("")}
-        </div>
-
-        <p class="user-bio">${user.bio}</p>
-      </div>
-
-      <div class="user-actions">
-        <button class="btn-connect" onclick="handleConnect(this)">Connect</button>
-        <button class="btn-message">Message</button>
-      </div>
-    `;
-
-    matchList.appendChild(card);
-  });
-
-  applyFilters(); // apply filters after render
+                card.innerHTML = `
+                    <img src="${randomImg}" class="user-avatar" alt="${u.name}">
+                    <div class="user-info">
+                        <div class="user-header">
+                            <span class="user-name">${u.name}</span>
+                            <span class="tag">${u.level}</span>
+                        </div>
+                        <div class="user-location">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            ${u.city} • ${randomKm} km away
+                        </div>
+                        <div class="user-interests">
+                            ${interests.map(sport => `<span class="interest-tag">${sport.trim()}</span>`).join('')}
+                        </div>
+                        <p class="user-bio">${u.description || 'No description provided.'}</p>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn-connect" onclick="connectUser('${u.name}')">Connect</button>
+                        <button class="btn-message">Message</button>
+                    </div>
+                `;
+                matchList.appendChild(card);
+            });
+        })
+        .catch(err => console.error("Error loading matches:", err));
 }
-renderCards();
+
+// Initial load
+loadMatches();
+
+// AUTO-UPDATE: Refresh the list every 30 seconds to show changes in DB
+setInterval(loadMatches, 30000);
+
+// Placeholder for the connect button
+function connectUser(name) {
+    alert("Connection request sent to " + name);
+}

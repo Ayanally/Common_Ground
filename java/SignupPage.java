@@ -17,41 +17,51 @@ public class SignupPage extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String role= req.getParameter("signup-role");
-        String Fname= req.getParameter("signup-fullname");
-        String Email= req.getParameter("signup-email");
-        String Password= req.getParameter("signup-pass");
+        String role     = req.getParameter("signup-role");
+        String fname    = req.getParameter("signup-fullname");
+        String email    = req.getParameter("signup-email");
+        String password = req.getParameter("signup-pass");
+        String address  = req.getParameter("signup-address");
+        String city     = req.getParameter("signup-city");
+        String pincode  = req.getParameter("signup-pincode");
 
-        String url= "jdbc:mysql://localhost:3306/users";
-        String user= "root";
-        String pass= "Salvi360@";
+        String url  = "jdbc:mysql://localhost:3306/new_user";
+        String user = "root";
+        String pass = "Salvi360@";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection(url, user, pass);
 
             PreparedStatement checkStmt = con.prepareStatement("SELECT * FROM userlist WHERE Email = ?");
-            checkStmt.setString(1, Email);
+            checkStmt.setString(1, email);
             ResultSet rs = checkStmt.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 resp.sendRedirect("common-ground-simple.html?error=exists");
-            }
-
-            else {
-                PreparedStatement ps = con.prepareStatement("INSERT INTO userlist(Fname, Email, Password, role) VALUES (?, ?, ?, ?)");
-                ps.setString(1, Fname);
-                ps.setString(2, Email);
-                ps.setString(3, Password);
+            } else {
+                PreparedStatement ps = con.prepareStatement(
+                        "INSERT INTO userlist (Fname, Email, Password, role, address, city, pincode, level) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+                );
+                ps.setString(1, fname);
+                ps.setString(2, email);
+                ps.setString(3, password);
                 ps.setString(4, role);
+                ps.setString(5, address);
+                ps.setString(6, city);
+                ps.setString(7, pincode);
+                ps.setString(8, "Beginner"); // default level
 
                 int result = ps.executeUpdate();
 
-                if(result>0) {
+                if (result > 0) {
                     HttpSession session = req.getSession();
-                    session.setAttribute("userEmail", Email);
+                    session.setAttribute("userEmail", email);
                     session.setAttribute("userRole", role);
-                    resp.sendRedirect("dashboard.html");
+                    session.setAttribute("userFname", fname);
+                    session.setAttribute("userCity", city);
+                    session.setAttribute("userLevel", "Beginner"); // default level
+                    resp.sendRedirect("dashboard.jsp");
                 }
 
                 ps.close();
@@ -59,12 +69,10 @@ public class SignupPage extends HttpServlet {
 
             checkStmt.close();
             con.close();
-        }
 
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            resp.sendRedirect("common-ground-simple.html?error=db");
         }
-
-
     }
 }
