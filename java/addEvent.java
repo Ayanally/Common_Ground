@@ -34,7 +34,7 @@ public class addEvent extends HttpServlet {
 
         String url      = "jdbc:mysql://localhost:3306/new_user";
         String user     = "root";
-        String password = "Salvi360@";
+        String password = "root123";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");

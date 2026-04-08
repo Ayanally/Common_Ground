@@ -1,4 +1,3 @@
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -24,7 +23,7 @@ public class LoginPage extends HttpServlet {
 
         String url  = "jdbc:mysql://localhost:3306/new_user";
         String user = "root";
-        String pass = "Salvi360@";
+        String pass = "root123"; // Change to your MySQL password
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
